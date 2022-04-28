@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RubyText Converter</title>
+	<script src="script_rubytextconverter.js"></script>
+	<style>
+		textarea {
+			min-width: 300px;
+			min-height: 150px;
+			padding: 1em;
+			margin: 1em;
+			box-sizing: border-box;
+			border: 4px solid deepskyblue;
+		}
+		pre {
+			border: 1px solid;
+			margin: 1em;
+			padding: 1em;
+			white-space: break-spaces;
+		}
+	</style>
+</head>
+<body>
+	<h1>RubyText (Furigana) Converter</h1>
+	<p>A tool for converting RubyText (Furigana) between different formats.</p>
+
+	<hr>
+	<h2>1. Input</h2>
+	<h3>RubyBackColon Format:</h3>
+	<p>Words are separated by ";". Phonetic Aides are denoted by "`".</p>
+	<p>Multiline input is allowed.</p>
+	<p><em>( example: "</em>日本語`にほんご;の;先生`せんせい;は;若`わか;いです。<em>" )</em></p>
+	<textarea id="input-rubybackcolon" placeholder="日`に;本`ほん;語`ご;">
+日本語`にほんご;の;
+先生`せんせい;は;若`わか;いです。</textarea>
+
+	<hr>
+	<h2>2. Live Results</h2>
+	<h3>RubyJsonMatrix Format:</h3>
+	<p>An array of lines, each with an array of ruby texts.</p>
+	<p><em>( Example output: 「　</em>[ [{"ruby":"你", "rt":"nei5"},{"ruby":"好", "rt":"hou2"}], [{"ruby":"嗎", "rt":"maa1"}] ]<em>　」 )</em>
+	<pre id="output-rubyjson">
+( Enter some text in the Input first 👆 )
+	</pre>
+
+	<h3>RubyHtml Format:</h3>
+	<h4>Display</h4>
+	<pre id="output-rubyhtml-display">
+…
+	</pre>
+	<h4>HTML Code</h4>
+	<pre id="output-rubyhtml-code">
+…
+	</pre>
+	<hr>
+	<p>Last updated April 2022</p>
+</body>
+
+<!-- UI Functions - Listen for Input & Output Results -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+		// Run conversion once when document has loaded
+		runConversion();	
+		// Run conversion every time the text is changed
+		$('#input-rubybackcolon').on('input', function() {
+			runConversion();		
+		});
+	});
+	function runConversion() {
+		var txt = $('#input-rubybackcolon').val();
+
+		var jsonmatrix_text = RubyTextConverter.backColonToJsonMatrix(txt);
+		$('#output-rubyjson').text(jsonmatrix_text);
+
+		var html_text = RubyTextConverter.backColonToHtml(txt);
+		$('#output-rubyhtml-display').html(html_text);
+		$('#output-rubyhtml-code').text(html_text);
+	}
+</script>
+</html>
